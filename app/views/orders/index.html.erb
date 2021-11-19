@@ -1,0 +1,28 @@
+<% provide(:title, 'Orders') %>
+<h1>Orders</h1>
+
+<%= will_paginate %>
+
+<ul class="food_items">
+  <% @orders.each do |order| %>
+    <li>
+      <% fi = FoodItem.find(order.food_item_id) %>
+      <% user = User.find(order.user_id) %>
+      <% #= link_to pluralize(order.quantity, fi.title), fi %>
+      <%= order.id %>
+      | <%= link_to user.name, user %>
+      | <%= pluralize(order.quantity, fi.title) %>
+      | <%= link_to order.address, "http://maps.google.com/maps?q=#{order.address}", :target => "_blank" %>
+      | <%= link_to "GMap", "comgooglemaps://?q=#{order.address}", :target => "_blank" %>
+      | <%= is_paid_text(order) %>
+      | <%= content_tag :span, is_delivered_text(order),
+                  :id => "delivery_status_#{order.id}" %>
+      | <%= link_to delivery_link_text(order),
+                  toggle_delivery_order_path(order),
+                  :remote => true,
+                  :id => "delivery_link_#{order.id}" %>
+    </li>
+  <% end %>
+</ul>
+
+<%= will_paginate %>
